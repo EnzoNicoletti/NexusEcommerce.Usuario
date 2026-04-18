@@ -17,6 +17,9 @@ public class ApplicationDbContext : IdentityDbContext<IdentityUser>
     // Nossas tabelas de negócio
     public DbSet<Cliente> Clientes { get; set; }
 
+    // Tabela de refresh tokens (para logout e token rotation)
+    public DbSet<RefreshToken> RefreshTokens { get; set; }
+
     // Configurações avançadas (Fluent API)
     protected override void OnModelCreating(ModelBuilder builder)
     {

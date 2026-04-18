@@ -5,7 +5,8 @@ public record ClienteResponseDto(
     Guid Id,
     string NomeCompleto,
     string Email,
-    string CpfFormatado
+    string CpfFormatado,
+    string Role = "Cliente"  // Papel do usuário (Cliente, Moderador, Administrador)
 );
 
 // Request: O que precisamos para completar o perfil

@@ -32,13 +32,32 @@ builder.Services.AddIdentityCore<IdentityUser>(options =>
 builder.Services.AddHttpClient<IConsultaCepService, ViaCepService>();
 builder.Services.AddScoped<IClienteService, ClienteService>();
 
+// TokenService: Geração e validação de JWT + Refresh Tokens
+builder.Services.AddScoped<ITokenService, TokenService>();
+
+// ✨ AutenticacaoService (PASSO 13)
+// Orquestra todas as operações de autenticação: login, refresh, logout, listagem, roles
+// Dependências:
+// - UserManager<IdentityUser> → Gerencia usuários (Identity)
+// - ApplicationDbContext → Acesso ao banco (RefreshTokens)
+// - IClienteService → Busca dados do cliente
+// - ITokenService → Gera/valida tokens
+builder.Services.AddScoped<IAutenticacaoService, AutenticacaoService>();
+
 // Mapster
 builder.Services.AddSingleton(TypeAdapterConfig.GlobalSettings);
 builder.Services.AddScoped<IMapper, ServiceMapper>();
 
 // 3. AUTENTICAÇÃO JWT
-var jwtSection = builder.Configuration.GetSection("Jwt");
-var key = Encoding.UTF8.GetBytes(jwtSection["Secret"]!);
+// Lê as configurações do appsettings.json
+var jwtSettings = builder.Configuration.GetSection("JwtSettings");
+var secretKey = jwtSettings["SecretKey"]
+    ?? throw new InvalidOperationException("JwtSettings:SecretKey não configurado em appsettings.json");
+var issuer = jwtSettings["Issuer"] ?? "NexusEcommerce";
+var audience = jwtSettings["Audience"] ?? "NexusEcommerceUsers";
+
+// Converte a chave secreta (string) para bytes (SymmetricSecurityKey exige bytes)
+var keyBytes = Encoding.UTF8.GetBytes(secretKey);
 
 builder.Services.AddAuthentication(options =>
 {
@@ -50,12 +69,17 @@ builder.Services.AddAuthentication(options =>
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(key),
+        // IssuerSigningKey: chave para verificar a assinatura do JWT
+        IssuerSigningKey = new SymmetricSecurityKey(keyBytes),
+
         ValidateIssuer = true,
-        ValidIssuer = jwtSection["Issuer"],
+        ValidIssuer = issuer,
+
         ValidateAudience = true,
-        ValidAudience = jwtSection["Audience"],
+        ValidAudience = audience,
+
         ValidateLifetime = true,
+        // ClockSkew: tolerância de tempo (0 = sem tolerância, token expirado = rejeita)
         ClockSkew = TimeSpan.Zero
     };
 });

@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using NexusEcommerce.Usuario.Domain.Entities;
+using NexusEcommerce.Usuario.Domain.Enums;
 using NexusEcommerce.Usuario.Domain.ValueObjects;
 
 namespace NexusEcommerce.Usuario.Infrastructure.Data.Configurations;
@@ -28,6 +29,17 @@ public class ClienteConfiguration : IEntityTypeConfiguration<Cliente>
 
         builder.Property(c => c.Cep).HasColumnType("varchar(9)");
         builder.Property(c => c.Estado).HasColumnType("varchar(2)");
+
+        // Configuração do Role (enum UserRole: Cliente=0, Moderador=1, Administrador=2)
+        // IsRequired(): obrigatório (todo cliente tem um role)
+        // HasDefaultValue(UserRole.Cliente): novo cliente começa com role "Cliente"
+        // HasConversion<int>(): armazena enum como int no banco (0, 1, 2)
+        // Vantagem: melhor performance (comparação numérica é mais rápida que string)
+        // Exemplo no banco: [Role] INT NOT NULL DEFAULT 0
+        builder.Property(c => c.Role)
+            .IsRequired()
+            .HasDefaultValue(UserRole.Cliente)
+            .HasConversion<int>();
 
         // Índices de performance e unicidade
         builder.HasIndex(c => c.Cpf).IsUnique().HasDatabaseName("IX_Clientes_Cpf_Unico");
