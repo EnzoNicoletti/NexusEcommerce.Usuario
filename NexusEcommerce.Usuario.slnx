@@ -1,0 +1,15 @@
+<Solution>
+  <Folder Name="/benchmarks/">
+    <Project Path="benchmarks/NexusEcommerce.Usuario.Benchmarks/NexusEcommerce.Usuario.Benchmarks.csproj" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/NexusEcommerce.Usuario.API/NexusEcommerce.Usuario.API.csproj" />
+    <Project Path="src/NexusEcommerce.Usuario.Application/NexusEcommerce.Usuario.Application.csproj" />
+    <Project Path="src/NexusEcommerce.Usuario.Domain/NexusEcommerce.Usuario.Domain.csproj" />
+    <Project Path="src/NexusEcommerce.Usuario.Infrastructure/NexusEcommerce.Usuario.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/NexusEcommerce.Usuario.Tests.Integration/NexusEcommerce.Usuario.Tests.Integration.csproj" />
+    <Project Path="tests/NexusEcommerce.Usuario.Tests.Unit/NexusEcommerce.Usuario.Tests.Unit.csproj" />
+  </Folder>
+</Solution>

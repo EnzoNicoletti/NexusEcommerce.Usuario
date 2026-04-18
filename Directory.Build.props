@@ -1,0 +1,10 @@
+﻿<Project>
+  <PropertyGroup>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <OpenApiGenerateDocuments>false</OpenApiGenerateDocuments>
+    <IncludeOpenApiXmlComments>false</IncludeOpenApiXmlComments>
+    <TieredCompilation>true</TieredCompilation>
+    <PublishReadyToRun>true</PublishReadyToRun>
+  </PropertyGroup>
+</Project>
